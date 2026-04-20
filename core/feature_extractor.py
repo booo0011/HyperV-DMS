@@ -77,3 +77,9 @@ def process_multimodal_video(video_path):
     v_feat = _extract_face_topology(video_path)
     a_feat = _extract_audio_mfcc(video_path)
     return v_feat, a_feat
+
+
+def process_static_features(video_path):
+    """Alias for process_multimodal_video; returns 1-D tensors (no batch dim)."""
+    v_feat, a_feat = process_multimodal_video(video_path)
+    return v_feat.squeeze(0), a_feat.squeeze(0)
