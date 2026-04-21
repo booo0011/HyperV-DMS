@@ -7,6 +7,7 @@ from core.hgnn_model import ResumeVoyagerNet
 from core.feature_extractor import process_static_features
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
 # Search for a trained model in common locations
 _model_candidates = [
     os.path.join(os.path.dirname(__file__), 'models', 'final_resume_voyagernet.pth'),
@@ -23,7 +24,6 @@ else:
     print(f" 警告: 未找到 {model_save_path}，当前使用随机初始化模型。")
 
 inference_model.eval()
-
 
 def dms_inference(video_path, audio_path):
     if video_path is None and audio_path is None:
@@ -72,7 +72,6 @@ def dms_inference(video_path, audio_path):
         return result_dict, alert_html
     except Exception as e:
         return {"Error": 1.0}, f'<div class="alert-box danger">故障: {str(e)}</div>'
-
 
 car_css = """
 * { box-sizing: border-box !important; }
@@ -214,4 +213,5 @@ with gr.Blocks(title="HyperV-DMS") as demo:
 
     btn.click(fn=dms_inference, inputs=[video_input, audio_input], outputs=[label_output, status_output])
 
-demo.launch(share=True, debug=True, css=car_css)
+if __name__ == "__main__":
+    demo.launch(share=True, debug=True, css=car_css)

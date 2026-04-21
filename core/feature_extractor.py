@@ -14,6 +14,8 @@ _BASE_DIR = os.path.dirname(__file__)
 MODEL_PATH = os.path.join(_BASE_DIR, 'face_landmarker.task')
 MODEL_URL = 'https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task'
 
+import imageio_ffmpeg
+
 
 def _ensure_mediapipe_model():
     if not os.path.exists(MODEL_PATH):
@@ -24,8 +26,9 @@ def _ensure_mediapipe_model():
 
 def _extract_audio_mfcc(video_path, sr=16000, n_mfcc=40):
     audio_path = os.path.splitext(video_path)[0] + '.wav'
+    ffmpeg_exe = imageio_ffmpeg.get_ffmpeg_exe()
     ffmpeg_cmd = [
-        'ffmpeg', '-y', '-loglevel', 'error', '-i', video_path,
+        ffmpeg_exe, '-y', '-loglevel', 'error', '-i', video_path,
         '-vn', '-acodec', 'pcm_s16le', '-ar', str(sr), '-ac', '1', audio_path
     ]
     subprocess.run(ffmpeg_cmd, capture_output=True)
